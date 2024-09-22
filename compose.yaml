@@ -1,0 +1,72 @@
+services:
+  postgresql:
+    image: postgres:16
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: scrapper
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root1234
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  liquibase-migrations:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/scrapper
+      - --username=postgres
+      - --password=root1234
+      - update
+    volumes:
+      - ./migrations:/liquibase/changelog
+    networks:
+      - backend
+
+  grafana:
+    build: 'scripts/config/grafana'
+    user: "0"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      backend:
+        aliases:
+          - grafana
+
+  prometheus:
+    image: prom/prometheus
+    user: "0"
+    ports:
+      - 9090:9090
+    volumes:
+      - ./scripts/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      backend:
+        aliases:
+          - prometheus
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379'
+
+volumes:
+  postgresql: { }
+  prometheus_data: { }
+  grafana_data: { }
+
+networks:
+  backend: { }
