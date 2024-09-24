@@ -1,0 +1,84 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "petr@gmail.com",
+      "first_name": "Petr",
+      "second_name": "Petrov",
+      "username": "Porox",
+      "phone": ""
+    },
+    {
+      "id": 2,
+      "email": "sveta@gmail.com",
+      "first_name": "Sveta",
+      "second_name": "Svetikova",
+      "username": "Light",
+      "phone": ""
+    },
+    {
+      "id": 3,
+      "email": "ivan@gmail.com",
+      "first_name": "Ivan",
+      "second_name": "Ivanov",
+      "username": "iVanOv",
+      "phone": ""
+    },
+    {
+      "id": 4,
+      "email": "victor@gmail.com",
+      "first_name": "Victor",
+      "second_name": "Galkevich",
+      "username": "kvyam",
+      "phone": ""
+    },
+    {
+      "id": 5,
+      "email": "anton@gmail.com",
+      "first_name": "Anton",
+      "second_name": "Kazlouski",
+      "username": "Qooriq",
+      "phone": ""
+    },
+    {
+      "id": 6,
+      "email": "pavel@gmail.com",
+      "first_name": "Pavel",
+      "second_name": "Volkov",
+      "username": "Wolf",
+      "phone": ""
+    },
+    {
+      "id": 7,
+      "email": "artyom@gmail.com",
+      "first_name": "Artyom",
+      "second_name": "Blagodarniy",
+      "username": "Blago",
+      "phone": ""
+    },
+    {
+      "id": 8,
+      "email": "nikolai@gmail.com",
+      "first_name": "Nikolai",
+      "second_name": "Bezmen",
+      "username": "Tytyrym",
+      "phone": "BezMenya"
+    },
+    {
+      "id": 9,
+      "email": "vova@gmail.com",
+      "first_name": "Vova",
+      "second_name": "Busko",
+      "username": "Tytyrym",
+      "phone": ""
+    },
+    {
+      "id": 10,
+      "email": "timofey@gmail.com",
+      "first_name": "Timofey",
+      "second_name": "Trofimovich",
+      "username": "Timoxa",
+      "phone": ""
+    }
+  ]
+}
