@@ -6,7 +6,7 @@
       "first_name": "Petr",
       "second_name": "Petrov",
       "username": "Porox",
-      "phone": ""
+      "phone_number": "+375295729428"
     },
     {
       "id": 2,
@@ -14,7 +14,7 @@
       "first_name": "Sveta",
       "second_name": "Svetikova",
       "username": "Light",
-      "phone": ""
+      "phone_number": "+375294832745"
     },
     {
       "id": 3,
@@ -22,7 +22,7 @@
       "first_name": "Ivan",
       "second_name": "Ivanov",
       "username": "iVanOv",
-      "phone": ""
+      "phone_number": "+375295936375"
     },
     {
       "id": 4,
@@ -30,7 +30,7 @@
       "first_name": "Victor",
       "second_name": "Galkevich",
       "username": "kvyam",
-      "phone": ""
+      "phone_number": "+375290127428"
     },
     {
       "id": 5,
@@ -38,7 +38,7 @@
       "first_name": "Anton",
       "second_name": "Kazlouski",
       "username": "Qooriq",
-      "phone": ""
+      "phone_number": "375291957302"
     },
     {
       "id": 6,
@@ -46,7 +46,7 @@
       "first_name": "Pavel",
       "second_name": "Volkov",
       "username": "Wolf",
-      "phone": ""
+      "phone_number": "+375290926751"
     },
     {
       "id": 7,
@@ -54,15 +54,15 @@
       "first_name": "Artyom",
       "second_name": "Blagodarniy",
       "username": "Blago",
-      "phone": ""
+      "phone_number": "+375291245625"
     },
     {
       "id": 8,
       "email": "nikolai@gmail.com",
       "first_name": "Nikolai",
       "second_name": "Bezmen",
-      "username": "Tytyrym",
-      "phone": "BezMenya"
+      "username": "BezMenya",
+      "phone_number": "+375291234567"
     },
     {
       "id": 9,
@@ -70,7 +70,7 @@
       "first_name": "Vova",
       "second_name": "Busko",
       "username": "Tytyrym",
-      "phone": ""
+      "phone_number": "+375293557355"
     },
     {
       "id": 10,
@@ -78,7 +78,7 @@
       "first_name": "Timofey",
       "second_name": "Trofimovich",
       "username": "Timoxa",
-      "phone": ""
+      "phone_number": "375297836554"
     }
   ]
 }
