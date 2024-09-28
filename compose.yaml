@@ -58,11 +58,6 @@ services:
         aliases:
           - prometheus
 
-  redis:
-    image: 'redis:latest'
-    ports:
-      - '6379'
-
 volumes:
   postgresql: { }
   prometheus_data: { }

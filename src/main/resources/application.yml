@@ -16,7 +16,3 @@ spring:
       format_sql: true
       hbm2ddl.auto: validate
     open-in-view: false
-  data:
-    redis:
-      host: 127.0.0.1
-      port: 6379
