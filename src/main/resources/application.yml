@@ -3,3 +3,20 @@ spring:
     name: CBox
   liquibase:
     enabled: false
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/scrapper}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:root1234}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties.hibernate:
+      batch_size: 50
+      fetch_size: 50
+      show_sql: true
+      format_sql: true
+      hbm2ddl.auto: validate
+    open-in-view: false
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
