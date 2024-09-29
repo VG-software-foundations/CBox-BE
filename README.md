@@ -17,3 +17,7 @@ Project is using next technologies:
    ![User Scenario](docs/User.png)
  * Document Scenario
    ![Document Scenario](docs/Document.png)
+
+
+# DB ERD
+![ERD](docs/Diagram.jpeg)
