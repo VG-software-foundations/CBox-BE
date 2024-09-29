@@ -9,13 +9,13 @@ Project is using next technologies:
 * Redis
 
 # Use-Case Diagrams: 
- * Guest Scenario
+ # Guest Scenario
    ![Guest Scenario](docs/Guest.png)
- * Admin Scenario
+ # Admin Scenario
    ![Admin Scenario](docs/Admin.png)
- * User Scenario
+ # User Scenario
    ![User Scenario](docs/User.png)
- * Document Scenario
+ # Document Scenario
    ![Document Scenario](docs/Document.png)
 
 
