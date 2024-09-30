@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS users
     modified_at  TIMESTAMP           NOT NULL,
     created_by   VARCHAR(128)        NOT NULL,
     modified_by  VARCHAR(128)        NOT NULL,
-    email        VARCHAR(128) UNIQUE NOT NULL,
+    email        VARCHAR(255) UNIQUE NOT NULL,
     first_name   VARCHAR(128)        NOT NULL,
     second_name  VARCHAR(128)        NOT NULL,
     username     VARCHAR(128)        NOT NULL,
