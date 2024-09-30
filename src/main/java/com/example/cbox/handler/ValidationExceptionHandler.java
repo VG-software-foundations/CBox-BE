@@ -1,5 +1,6 @@
 package com.example.cbox.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice(basePackages = "com.example.cbox.controller")
+@Slf4j
 public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
@@ -26,6 +28,9 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
+        });
+        errors.forEach((key, value) -> {
+            log.warn("{} : {}", key, value);
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
