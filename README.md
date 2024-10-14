@@ -21,3 +21,6 @@ Project is using next technologies:
 
 # DB ERD
 ![ERD](docs/Diagram.jpeg)
+
+# API Description
+ [User Scenario](api/user_api.json)
