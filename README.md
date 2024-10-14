@@ -23,4 +23,4 @@ Project is using next technologies:
 ![ERD](docs/Diagram.jpeg)
 
 # API Description
- ![User Scenario](api/user_api.json)
+ [User Scenario](api/user_api.json)
