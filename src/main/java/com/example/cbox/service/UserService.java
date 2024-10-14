@@ -3,6 +3,7 @@ package com.example.cbox.service;
 import com.example.cbox.annotation.TransactionalService;
 import com.example.cbox.dto.create.UserCreateEditDto;
 import com.example.cbox.dto.read.UserReadDto;
+import com.example.cbox.entity.User;
 import com.example.cbox.enumeration.UserStatus;
 import com.example.cbox.repository.UserRepository;
 import com.example.cbox.mapper.UserMapper;
