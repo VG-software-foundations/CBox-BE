@@ -10,6 +10,7 @@ import com.example.cbox.service.UserService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,7 @@ import static org.springframework.http.ResponseEntity.*;
 @ValidatedController
 @RequestMapping(value = "/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
 
@@ -36,6 +38,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserReadDto> findById(@PathVariable("id") String id) {
+        log.info("findById() for id {} called", id);
         return userService.findById(UUID.fromString(id))
                 .map(obj -> ok()
                         .body(obj))
@@ -46,6 +49,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserReadDto> create(@RequestPart @Validated UserData data,
                                               @AuthenticationPrincipal UserAuthDto user) {
+        log.info("create() for user with id {} called", user.id());
         UserCreateEditDto dto = toDto(user, data);
         return ok().body(userService.create(dto));
     }
@@ -54,6 +58,7 @@ public class UserController {
     public ResponseEntity<UserReadDto> update(@AuthenticationPrincipal UserAuthDto user,
                                               @RequestPart @Validated UserData data) {
         UserCreateEditDto dto = toDto(user, data);
+        log.info("update() for user with id {} called", user.id());
         return userService.update(user.id(), dto)
                 .map(obj -> ok().body(obj))
                 .orElseGet(notFound()::build);
@@ -61,6 +66,7 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@AuthenticationPrincipal UserAuthDto user) {
+        log.info("delete() for user with id {} called", user.id());
         return userService.delete(user.id())
                 ? noContent().build()
                 : notFound().build();
