@@ -1,5 +1,7 @@
 package com.example.cbox.dto.create;
 
+import com.example.cbox.enumeration.Role;
+
 import java.util.UUID;
 
 public record UserCreateEditDto(
@@ -8,6 +10,7 @@ public record UserCreateEditDto(
         String firstName,
         String secondName,
         String username,
-        String phoneNumber
+        String phoneNumber,
+        Role role
 ) {
 }
