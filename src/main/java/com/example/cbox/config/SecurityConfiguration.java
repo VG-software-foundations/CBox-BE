@@ -3,6 +3,7 @@ package com.example.cbox.config;
 import com.example.cbox.dto.create.UserAuthDto;
 import com.example.cbox.enumeration.Role;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -27,6 +28,7 @@ import java.util.UUID;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfiguration {
 
     @Bean
@@ -77,6 +79,7 @@ public class SecurityConfiguration {
                     .map(x -> Role.valueOf((String) x))
                     .toList();
             UserAuthDto dto = new UserAuthDto(sub, email, authorities);
+            log.info("User: {} entered the application", dto);
             return new UsernamePasswordAuthenticationToken(
                     dto, null, authorities
             );
