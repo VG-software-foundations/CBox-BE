@@ -1,5 +1,6 @@
 package com.example.cbox.entity;
 
+import com.example.cbox.enumeration.Role;
 import com.example.cbox.enumeration.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,4 +40,8 @@ public class User extends AuditingEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "status")
     private UserStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "role")
+    private Role role;
 }
