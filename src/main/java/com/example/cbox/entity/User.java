@@ -41,6 +41,6 @@ public class User extends AuditingEntity {
     @Column(nullable = false, name = "status")
     private UserStatus status;
 
-    @OneToMany(mappedBy = "fileId")
+    @OneToMany(mappedBy = "userId")
     private List<LinkRestrictionBypass> restrictionsBypass;
 }

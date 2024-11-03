@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @IntegrationTest
+@ActiveProfiles("test")
 class UserServiceTest extends IntegrationTestBase {
 
     private static final UUID USER_ID = UUID.fromString("8ca8d838-9072-4721-8fcc-1d58c9aa5ce7");

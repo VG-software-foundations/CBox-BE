@@ -23,7 +23,7 @@ public class FileEntity extends AuditingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, name = "fileName")
+    @Column(unique = true, nullable = false, name = "link")
     private String link;
 
     @Enumerated(EnumType.STRING)

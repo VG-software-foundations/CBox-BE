@@ -1,5 +1,6 @@
 package com.example.cbox.controller;
 
+import com.example.cbox.annotation.ValidatedController;
 import com.example.cbox.dto.create.FileCreateEditDto;
 import com.example.cbox.dto.create.UserAuthDto;
 import com.example.cbox.dto.create.UserData;
@@ -24,7 +25,8 @@ import java.util.List;
 import static org.springframework.http.ResponseEntity.*;
 
 @Slf4j
-@RestController("/files")
+@ValidatedController()
+@RequestMapping(value = "/files")
 @RequiredArgsConstructor
 public class FileController {
     private final FileService fileService;
@@ -61,7 +63,7 @@ public class FileController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@AuthenticationPrincipal FileCreateEditDto file) {
+    public ResponseEntity<Void> delete(@RequestParam FileCreateEditDto file) {
         log.info("delete() for file with id {} called", file.id());
         return fileService.delete(file.id())
                 ? noContent().build()
