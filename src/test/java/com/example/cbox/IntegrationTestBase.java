@@ -9,17 +9,19 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@IntegrationTest
 @Testcontainers
 @Slf4j
 public class IntegrationTestBase {
@@ -27,12 +29,17 @@ public class IntegrationTestBase {
 
     static {
         POSTGRES = new PostgreSQLContainer<>("postgres:16")
-                .withDatabaseName("scrapper")
+                .withDatabaseName("scrapper_test")
                 .withUsername("postgres")
-                .withPassword("test_password");
+                .withPassword("postgres");
         POSTGRES.start();
 
         runMigrations(POSTGRES);
+    }
+
+    @DynamicPropertySource
+    static void postgresProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
     }
 
     private static void runMigrations(JdbcDatabaseContainer<?> c) {

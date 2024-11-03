@@ -3,10 +3,9 @@ package com.example.cbox.repository;
 import com.example.cbox.IntegrationTest;
 import com.example.cbox.IntegrationTestBase;
 import com.example.cbox.entity.User;
-import com.example.cbox.enumeration.UserStatus;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +14,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @IntegrationTest
+@ActiveProfiles("test")
 public class UserRepositoryTest extends IntegrationTestBase {
 
     private UUID USER_ID = UUID.fromString("8ca8d838-9072-4721-8fcc-1d58c9aa5ce7");
@@ -23,7 +23,7 @@ public class UserRepositoryTest extends IntegrationTestBase {
     private UserRepository userRepository;
 
     @Test
-    void findAll(){
+    void findAll() {
         List<User> all = userRepository.findAll();
 
         assertNotNull(all);

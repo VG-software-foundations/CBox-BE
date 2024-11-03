@@ -4,6 +4,7 @@ import com.example.cbox.IntegrationTest;
 import com.example.cbox.IntegrationTestBase;
 import com.example.cbox.dto.create.UserCreateEditDto;
 import com.example.cbox.dto.read.UserReadDto;
+import com.example.cbox.enumeration.Role;
 import com.example.cbox.mapper.UserMapper;
 import com.example.cbox.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,16 +50,16 @@ class UserServiceTest extends IntegrationTestBase {
 
     @Test
     void create() {
-//        UserCreateEditDto test = new UserCreateEditDto(UUID.fromString("4ee0c212-9ad6-4141-847f-18fe0a5141e7")
-//                , "test@gmail.com", "Test", "Testovich", "Testov", "+375299999999");
-//
-//        UserReadDto userReadDto = userService.create(test);
+        UserCreateEditDto test = new UserCreateEditDto(UUID.fromString("4ee0c212-9ad6-4141-847f-18fe0a5141e7")
+                , "test@gmail.com", "Test", "Testovich", "Testov", "+375299999999", Role.USER);
+
+        UserReadDto userReadDto = userService.create(test);
     }
 
     @Test
     void update() {
         UserCreateEditDto test = new UserCreateEditDto(USER_ID,
-                "test@gmail.com", "Test", "Testovich", "Testov", "+375299999999");
+                "test@gmail.com", "Test", "Testovich", "Testov", "+375299999999", Role.USER);
 
         var result = userService.update(USER_ID, test);
 

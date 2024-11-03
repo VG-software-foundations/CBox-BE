@@ -1,10 +1,10 @@
 package com.example.cbox.entity;
 
-import com.example.cbox.enumeration.Role;
 import com.example.cbox.enumeration.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static lombok.EqualsAndHashCode.*;
@@ -41,7 +41,6 @@ public class User extends AuditingEntity {
     @Column(nullable = false, name = "status")
     private UserStatus status;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, name = "role")
-    private Role role;
+    @OneToMany(mappedBy = "fileId")
+    private List<LinkRestrictionBypass> restrictionsBypass;
 }
