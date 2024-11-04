@@ -1,28 +1,31 @@
 package com.example.cbox.config;
 
-import com.example.cbox.dto.create.UserAuthDto;
-import com.example.cbox.enumeration.Role;
+import com.example.cbox.filter.JwtTokenFilter;
+import com.example.cbox.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
@@ -30,7 +33,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfiguration {
-
+    private final JwtTokenFilter jwtTokenFilter;
+    private final UserService userService;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -48,11 +52,9 @@ public class SecurityConfiguration {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(
-                        jwt -> jwt.jwtAuthenticationConverter(
-                                new CustomAuthenticationConverter()
-                        )
-                ));
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -67,22 +69,22 @@ public class SecurityConfiguration {
         return source;
     }
 
-    static class CustomAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
-        public AbstractAuthenticationToken convert(Jwt jwt) {
-            Map<String, Object> claims = jwt.getClaims();
-            UUID sub = UUID.fromString((String) claims.get("sub"));
-            String email = (String) claims.get("email");
-            List<Object> notParsedAuthorities = (List<Object>) claims.get("cognito:groups");
-            List<Role> authorities = notParsedAuthorities == null
-                    ? List.of(Role.USER)
-                    : (notParsedAuthorities).stream()
-                    .map(x -> Role.valueOf((String) x))
-                    .toList();
-            UserAuthDto dto = new UserAuthDto(sub, email, authorities);
-            log.info("User: {} entered the application", dto);
-            return new UsernamePasswordAuthenticationToken(
-                    dto, null, authorities
-            );
-        }
+    @Bean
+    public static PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userService.userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
     }
 }

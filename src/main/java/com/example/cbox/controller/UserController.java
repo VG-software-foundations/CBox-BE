@@ -3,17 +3,19 @@ package com.example.cbox.controller;
 import com.example.cbox.annotation.ValidatedController;
 import com.example.cbox.dto.create.UserAuthDto;
 import com.example.cbox.dto.create.UserCreateEditDto;
-import com.example.cbox.dto.create.UserData;
+import com.example.cbox.dto.create.UserLoginDto;
+import com.example.cbox.dto.read.JwtAuthenticationResponse;
 import com.example.cbox.dto.read.PageResponse;
 import com.example.cbox.dto.read.UserReadDto;
+import com.example.cbox.service.AuthenticationService;
 import com.example.cbox.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +27,11 @@ import static org.springframework.http.ResponseEntity.*;
 @ValidatedController
 @RequestMapping(value = "/users")
 @RequiredArgsConstructor
-@Slf4j
 public class UserController {
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<PageResponse<UserReadDto>> findAll(@RequestParam(defaultValue = "1") @Min(1) Integer page,
                                                              @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer limit) {
         return ok().body(PageResponse.of(userService.findAll(page, limit)));
@@ -38,7 +39,6 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserReadDto> findById(@PathVariable("id") String id) {
-        log.info("findById() for id {} called", id);
         return userService.findById(UUID.fromString(id))
                 .map(obj -> ok()
                         .body(obj))
@@ -47,18 +47,14 @@ public class UserController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserReadDto> create(@RequestPart @Validated UserData data,
-                                              @AuthenticationPrincipal UserAuthDto user) {
-        log.info("create() for user with id {} called", user.id());
-        UserCreateEditDto dto = toDto(user, data);
-        return ok().body(userService.create(dto));
+    public ResponseEntity<UserReadDto> create(@RequestBody @Validated UserCreateEditDto user) {
+
+        return ok().body(userService.create(user));
     }
 
     @PutMapping()
-    public ResponseEntity<UserReadDto> update(@AuthenticationPrincipal UserAuthDto user,
-                                              @RequestPart @Validated UserData data) {
-        UserCreateEditDto dto = toDto(user, data);
-        log.info("update() for user with id {} called", user.id());
+    public ResponseEntity<UserReadDto> update(@AuthenticationPrincipal UserAuthDto user) {
+        UserCreateEditDto dto = toDto(user);
         return userService.update(user.id(), dto)
                 .map(obj -> ok().body(obj))
                 .orElseGet(notFound()::build);
@@ -66,7 +62,6 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@AuthenticationPrincipal UserAuthDto user) {
-        log.info("delete() for user with id {} called", user.id());
         return userService.delete(user.id())
                 ? noContent().build()
                 : notFound().build();
@@ -80,14 +75,22 @@ public class UserController {
                 .orElseGet(notFound()::build);
     }
 
-    private UserCreateEditDto toDto(UserAuthDto user, UserData data) {
+    @Operation(summary = "Регистрация пользователя")
+    @PostMapping("/sign-up")
+    public JwtAuthenticationResponse signUp(@RequestBody @Valid UserCreateEditDto request) {
+        return authenticationService.signUp(request);
+    }
+
+    @Operation(summary = "Авторизация пользователя")
+    @PostMapping("/sign-in")
+    public JwtAuthenticationResponse signIn(@RequestBody @Valid UserLoginDto request) {
+        return authenticationService.signIn(request);
+    }
+
+    private UserCreateEditDto toDto(UserAuthDto user) {
         return new UserCreateEditDto(
-                user.id(),
-                user.email(),
-                data.firstName(),
-                data.secondName(),
-                data.username(),
-                data.phoneNumber(),
+                user.password(),
+                user.username(),
                 user.authorities().getFirst()
         );
     }
