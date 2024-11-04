@@ -10,6 +10,9 @@ import com.example.cbox.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -37,6 +40,7 @@ public class UserService {
         return Optional.of(dto)
                 .map(userMapper::toUser)
                 .map(user -> {
+                    user.setId(UUID.randomUUID());
                     user.setStatus(UserStatus.ACTIVE);
                     return user;
                 })
@@ -65,4 +69,27 @@ public class UserService {
                 })
                 .orElse(false);
     }
+
+    /**
+     * Получение пользователя по имени пользователя
+     * <p>
+     * Нужен для Spring Security
+     *
+     * @return пользователь
+     */
+    public UserDetailsService userDetailsService() {
+        return this::getByUsername;
+    }
+
+    /**
+     * Получение пользователя по имени пользователя
+     *
+     * @return пользователь
+     */
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+    }
+
 }

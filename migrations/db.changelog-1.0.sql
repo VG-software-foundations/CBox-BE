@@ -20,15 +20,14 @@ CREATE TABLE IF NOT EXISTS link_restrictions_bypass
 CREATE TABLE IF NOT EXISTS users
 (
     id           uuid PRIMARY KEY,
-    created_at   TIMESTAMP           NOT NULL,
-    modified_at  TIMESTAMP           NOT NULL,
-    created_by   VARCHAR(128)        NOT NULL,
-    modified_by  VARCHAR(128)        NOT NULL,
-    email        VARCHAR(255) UNIQUE NOT NULL,
-    first_name   VARCHAR(128)        NOT NULL,
-    second_name  VARCHAR(128)        NOT NULL,
-    username     VARCHAR(128)        NOT NULL,
-    phone_number VARCHAR(128) UNIQUE
+    created_at   TIMESTAMP           ,
+    modified_at  TIMESTAMP           ,
+    created_by   VARCHAR(128)        ,
+    modified_by  VARCHAR(128)        ,
+    status VARCHAR(8),
+    role VARCHAR(8),
+    password VARCHAR(256),
+    username     VARCHAR(128)        NOT NULL
 );
 
 --changeset Qooriq:4
