@@ -60,16 +60,6 @@
           "user-controller"
         ],
         "operationId": "update",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserCreateEditDto"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK",
@@ -116,6 +106,20 @@
           "user-controller"
         ],
         "operationId": "delete",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/sign-up": {
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Регистрация пользователя",
+        "operationId": "signUp",
         "requestBody": {
           "content": {
             "application/json": {
@@ -128,7 +132,45 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JwtAuthenticationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/sign-in": {
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "summary": "Авторизация пользователя",
+        "operationId": "signIn",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/JwtAuthenticationResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -169,16 +211,6 @@
           "user-controller"
         ],
         "operationId": "findSelf",
-        "parameters": [
-          {
-            "name": "user",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/UserCreateEditDto"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -196,46 +228,54 @@
   },
   "components": {
     "schemas": {
-      "UserCreateEditDto": {
+      "UserReadDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "secondName": {
-            "type": "string"
-          },
           "username": {
-            "type": "string"
-          },
-          "phoneNumber": {
             "type": "string"
           }
         }
       },
-      "UserReadDto": {
+      "UserCreateEditDto": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "secondName": {
+          "password": {
             "type": "string"
           },
           "username": {
             "type": "string"
           },
-          "phoneNumber": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "ADMIN",
+              "USER"
+            ]
+          }
+        }
+      },
+      "JwtAuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Токен доступа",
+            "example": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMjUwNj..."
+          }
+        },
+        "description": "Ответ c токеном доступа"
+      },
+      "UserLoginDto": {
+        "required": [
+          "password",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "username": {
             "type": "string"
           }
         }
