@@ -23,7 +23,7 @@ public class LinkRestrictionBypass {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "file_id")
-    FileEntity fileId;
+    File fileId;
 
 
     @JoinColumn(nullable = false, name = "user_id")
@@ -32,11 +32,11 @@ public class LinkRestrictionBypass {
 
     public void setUser(User user) {
         this.userId = user;
-        userId.getRestrictionsBypass().add(this);
+        userId.getRestrictions().add(this);
     }
 
-    public void setFile(FileEntity file) {
+    public void setFile(File file) {
         this.fileId = file;
-        file.getRestrictionsBypass().add(this);
+        file.getRestrictions().add(this);
     }
 }

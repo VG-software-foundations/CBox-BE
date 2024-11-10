@@ -4,6 +4,7 @@ import com.example.cbox.enumeration.FileAccessType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static lombok.EqualsAndHashCode.Include;
@@ -16,7 +17,7 @@ import static lombok.EqualsAndHashCode.Include;
 @AllArgsConstructor
 @Entity
 @Table(name = "files")
-public class FileEntity extends AuditingEntity {
+public class File extends AuditingEntity {
 
     @Id
     @Include
@@ -30,7 +31,8 @@ public class FileEntity extends AuditingEntity {
     @Column(nullable = false, name = "acces_type")
     private FileAccessType accessType;
 
+    @Builder.Default
     @OneToMany(mappedBy = "fileId")
-    private List<LinkRestrictionBypass> restrictionsBypass;
+    private List<LinkRestrictionBypass> restrictions = new ArrayList<>();
 
 }

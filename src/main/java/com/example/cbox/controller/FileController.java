@@ -3,7 +3,6 @@ package com.example.cbox.controller;
 import com.example.cbox.annotation.ValidatedController;
 import com.example.cbox.dto.create.FileCreateEditDto;
 import com.example.cbox.dto.create.UserAuthDto;
-import com.example.cbox.dto.create.UserData;
 import com.example.cbox.dto.read.FileReadDto;
 import com.example.cbox.dto.read.PageResponse;
 import com.example.cbox.service.FileService;
@@ -15,11 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.*;
@@ -40,32 +36,29 @@ public class FileController {
 
     @SneakyThrows
     @PostMapping("/upload")
-    public ResponseEntity<FileReadDto> upload(@RequestPart @Validated UserData data,
-                                              @AuthenticationPrincipal UserAuthDto user,
-                                              @RequestParam FileCreateEditDto file) {
-        InputStream inputStream = new FileInputStream(file.fileName());
-        return ok().body(fileService.create(data, user, file, inputStream));
+    public ResponseEntity<FileReadDto> upload(@RequestParam UserAuthDto dto,
+                                              @RequestParam FileCreateEditDto fileDto) {
+        return ok().body(fileService.create(dto, fileDto));
     }
 
     @GetMapping("/get")
-    public ResponseEntity<List<FileReadDto>> get(@RequestPart @Validated UserData data,
-                                                 @AuthenticationPrincipal UserAuthDto user) {
-        return ok().body(fileService.findAllUserFiles(data, user));
+    public ResponseEntity<List<FileReadDto>> get(@AuthenticationPrincipal UserAuthDto user) {
+        return ok().body(fileService.findAllUserFiles(user));
     }
 
     @SneakyThrows
-    @PutMapping()
-    public ResponseEntity<FileReadDto> update(@RequestParam FileCreateEditDto file) {
-        InputStream inputStream = new FileInputStream(file.fileName());
-        return fileService.update(file.id(), file, inputStream)
+    @PutMapping
+    public ResponseEntity<FileReadDto> update(@RequestParam FileCreateEditDto fileDto) {
+        return fileService.update(fileDto)
                 .map(obj -> ok().body(obj))
                 .orElseGet(notFound()::build);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam FileCreateEditDto file) {
-        log.info("delete() for file with id {} called", file.id());
-        return fileService.delete(file.id())
+    public ResponseEntity<Void> delete(@RequestParam UserAuthDto dto,
+                                       @RequestParam String fileName) {
+        log.info("delete() for file with id {} called", fileName);
+        return fileService.deleteByLink(dto, fileName)
                 ? noContent().build()
                 : notFound().build();
     }

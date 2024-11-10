@@ -9,10 +9,11 @@ ALTER TABLE files
 
 
 --changeset Qooriq:2
-INSERT INTO files (id, link, acces_type, created_at, modified_at, created_by, modified_by)
+INSERT INTO files (link, acces_type, created_at, modified_at, created_by, modified_by)
 VALUES
-    (1, './files/aboba', 'PUBLIC', NOW(), NOW(), 'admin', 'admin'),
-    (2, './files/privet', 'RESTRICTED', NOW(), NOW(), 'admin', 'admin');
+    ('./files/8ca8d838-9072-4721-8fcc-1d58c9aa5ce7/aboba', 'PUBLIC', NOW(), NOW(), 'admin', 'admin'),
+    ('./files/d686f214-007e-46ce-9557-ee2710b1eec9/aboba', 'PUBLIC', NOW(), NOW(), 'admin', 'admin'),
+    ('./files/8ca8d838-9072-4721-8fcc-1d58c9aa5ce7/privet.txt', 'RESTRICTED', NOW(), NOW(), 'admin', 'admin');
 
 --changeset Qooriq:3
 INSERT INTO link_restrictions_bypass (file_id, user_id)

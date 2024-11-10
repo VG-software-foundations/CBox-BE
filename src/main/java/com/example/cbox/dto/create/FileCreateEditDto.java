@@ -1,10 +1,10 @@
 package com.example.cbox.dto.create;
 
 import com.example.cbox.enumeration.FileAccessType;
+import org.springframework.web.multipart.MultipartFile;
 
 public record FileCreateEditDto(
-        Long id,
-        String fileName,
+        MultipartFile file,
         FileAccessType accessType
 ){
 }

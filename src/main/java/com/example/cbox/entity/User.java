@@ -1,6 +1,7 @@
 package com.example.cbox.entity;
 
 /*import com.example.cbox.enumeration.Role;*/
+
 import com.example.cbox.enumeration.Role;
 import com.example.cbox.enumeration.UserStatus;
 import jakarta.persistence.*;
@@ -9,11 +10,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import static lombok.EqualsAndHashCode.*;
+import static lombok.EqualsAndHashCode.Include;
 
 @Data
 @Builder
@@ -41,6 +43,10 @@ public class User extends AuditingEntity implements UserDetails, Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "role")
     private Role role;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "userId")
+    List<LinkRestrictionBypass> restrictions = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
