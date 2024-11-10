@@ -3,6 +3,7 @@ package com.example.cbox.controller;
 import com.example.cbox.annotation.ValidatedController;
 import com.example.cbox.dto.create.FileCreateEditDto;
 import com.example.cbox.dto.create.UserAuthDto;
+import com.example.cbox.dto.read.FileGetDto;
 import com.example.cbox.dto.read.FileReadDto;
 import com.example.cbox.dto.read.PageResponse;
 import com.example.cbox.service.FileService;
@@ -15,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.http.ResponseEntity.*;
 
@@ -41,9 +40,19 @@ public class FileController {
         return ok().body(fileService.create(dto, fileDto));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FileGetDto> findById(@PathVariable("id") Long id) {
+        return fileService.findById(id)
+                .map(obj -> ok()
+                        .body(obj))
+                .orElseGet(notFound()::build);
+    }
+
     @GetMapping("/get")
-    public ResponseEntity<List<FileReadDto>> get(@AuthenticationPrincipal UserAuthDto user) {
-        return ok().body(fileService.findAllUserFiles(user));
+    public ResponseEntity<PageResponse<FileReadDto>> get(@AuthenticationPrincipal UserAuthDto user,
+                                                         @RequestParam(defaultValue = "1") @Min(1) Integer page,
+                                                         @RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer limit) {
+        return ok().body(PageResponse.of(fileService.findAllUserFiles(user, page, limit)));
     }
 
     @SneakyThrows

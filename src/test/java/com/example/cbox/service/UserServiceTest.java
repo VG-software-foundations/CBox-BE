@@ -56,11 +56,10 @@ class UserServiceTest extends IntegrationTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"8ca8d838-9072-4721-8fcc-1d58c9aa5ce7", "396e17be-aa8f-46cf-b365-dc351e2be659",
-            "4784470c-2e19-490f-ad22-79003eecb088", "52831983-f37c-48fd-a551-14ca1df4cb67", "ff54e9c5-16ba-4f08-800e-f6fe4ebf363d",
-            "523cad5d-d930-4ca9-8eab-5d5758588b91", "f9a27af1-0bea-4f00-a61c-cd63483e88b6", "de7c61ba-cc9c-404d-bf13-035ee10d19d1"})
-    void create(String id) {
-        UserCreateEditDto test = new UserCreateEditDto(id, "Porox", Role.USER);
+    @ValueSource(strings = {"Nichosi", "Aleg", "Cadrol",
+    "ccnc", "Miracle", "Dratute"})
+    void create(String username) {
+        UserCreateEditDto test = new UserCreateEditDto("asbdishfioi23r3lA", username, Role.USER);
 
         UserReadDto userReadDto = userService.create(test);
 

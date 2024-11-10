@@ -3,6 +3,7 @@ package com.example.cbox.service;
 import com.example.cbox.annotation.TransactionalService;
 import com.example.cbox.dto.create.FileCreateEditDto;
 import com.example.cbox.dto.create.UserAuthDto;
+import com.example.cbox.dto.read.FileGetDto;
 import com.example.cbox.dto.read.FileReadDto;
 import com.example.cbox.entity.File;
 import com.example.cbox.entity.LinkRestrictionBypass;
@@ -15,10 +16,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
@@ -46,9 +50,18 @@ public class FileService {
                 .map(fileMapper::toFileReadDto);
     }
 
-    public Optional<FileReadDto> findById(Long id) {
-        return fileRepository.findById(id)
-                .map(fileMapper::toFileReadDto);
+    @SneakyThrows
+    public Optional<FileGetDto> findById(Long id) {
+        return Optional.of(new FileGetDto(fileRepository.findById(id)
+                .map(file -> {
+                    try {
+                        System.out.println("aba");
+                        return new FileInputStream(file.getLink());
+                    } catch (FileNotFoundException e) {
+                        return null;
+                    }
+                })
+                .get().readAllBytes()));
     }
 
     @Transactional
@@ -70,18 +83,22 @@ public class FileService {
     @Transactional
     public FileReadDto create(UserAuthDto dto, FileCreateEditDto fileDto) {
         Path path = Path.of(bucket, dto.id().toString(), fileDto.file().getOriginalFilename());
+
         File curFile = new File();
         curFile.setLink(bucket + "/" + dto.id() + "/" + fileDto.file().getOriginalFilename());
         curFile.setCreatedBy(dto.id().toString());
         curFile.setModifiedBy(dto.id().toString());
         curFile.setCreatedAt(Instant.now());
         curFile.setModifiedAt(Instant.now());
+
         User userEntity = userRepository.findById(dto.id()).get();
+
         LinkRestrictionBypass link = new LinkRestrictionBypass();
         link.setUser(userEntity);
         link.setFile(curFile);
         fileRepository.save(curFile);
         linkRepository.save(link);
+
         var inputStream = fileDto.file().getInputStream();
         try (inputStream) {
             Files.createDirectories(path.getParent());
@@ -109,12 +126,18 @@ public class FileService {
                 .map(fileMapper::toFileReadDto);
     }
 
-    public List<FileReadDto> findAllUserFiles(UserAuthDto user) {
+    public Page<FileReadDto> findAllUserFiles(UserAuthDto user, Integer page, Integer limit) {
         var optionalUser = userRepository.findById(user.id());
+        PageRequest req = PageRequest.of(page - 1, limit);
         var restrictionsBypass = optionalUser.get().getRestrictions();
-        return restrictionsBypass.stream()
+        List<FileReadDto> list = restrictionsBypass.stream()
                 .map(restriction -> fileMapper.toFileReadDto(restriction.getFileId()))
                 .toList();
+        int start = (int) req.getOffset();
+        int end = Math.min(start + req.getPageSize(), list.size());
+
+        List<FileReadDto> files = list.subList(start, end);
+        return new PageImpl<>(files, req, list.size());
     }
 
     public Optional<FileReadDto> findFileByLink(String link) {
