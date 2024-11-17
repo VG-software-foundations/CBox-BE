@@ -43,7 +43,7 @@ public class FileService {
     private final UserRepository userRepository;
     private final LinkRepository linkRepository;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     public Page<FileReadDto> findAll(Integer page, Integer limit) {
         PageRequest req = PageRequest.of(page - 1, limit);
         return fileRepository.findAll(req)
