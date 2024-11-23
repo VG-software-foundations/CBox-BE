@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +38,7 @@ class UserServiceTest extends IntegrationTestBase {
 
     @BeforeEach
     void setForService() {
-        userService = new UserService(userMapper, userRepository);
+        userService = new UserService(userMapper, userRepository, new BCryptPasswordEncoder());
     }
 
     @Test
@@ -72,6 +75,7 @@ class UserServiceTest extends IntegrationTestBase {
             "523cad5d-d930-4ca9-8eab-5d5758588b91", "f9a27af1-0bea-4f00-a61c-cd63483e88b6", "de7c61ba-cc9c-404d-bf13-035ee10d19d1"})
     void update(UUID id) {
         UserCreateEditDto test = new UserCreateEditDto("abib", "Porox", Role.USER);
+
 
         var result = userService.update(id, test);
 
