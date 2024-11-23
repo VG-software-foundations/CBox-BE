@@ -1,13 +1,13 @@
 package com.example.cbox.mapper;
 
-import com.example.cbox.config.MapperConfiguration;
+import com.example.cbox.config.MapperConfigurationn;
 import com.example.cbox.dto.create.FileCreateEditDto;
 import com.example.cbox.dto.read.FileReadDto;
 import com.example.cbox.entity.File;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(config = MapperConfiguration.class)
+@Mapper(config = MapperConfigurationn.class)
 public interface FileMapper {
 
     FileReadDto toFileReadDto(File file);

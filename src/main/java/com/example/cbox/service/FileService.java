@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileInputStream;
@@ -51,12 +50,11 @@ public class FileService {
     }
 
     @SneakyThrows
-    public Optional<FileGetDto> findById(Long id) {
+    public Optional<FileGetDto> findById(UserAuthDto dto, Long id) {
         return Optional.of(new FileGetDto(fileRepository.findById(id)
                 .map(file -> {
                     try {
-                        System.out.println("aba");
-                        return new FileInputStream(file.getLink());
+                        return new FileInputStream(bucket + "/" + dto.id().toString() + "/" + file.getLink());
                     } catch (FileNotFoundException e) {
                         return null;
                     }
@@ -68,7 +66,7 @@ public class FileService {
     public boolean delete(Long id) {
         var file = fileRepository.findById(id);
         fileRepository.deleteById(id);
-        return file.isPresent();
+        return file.isEmpty();
     }
 
     @Transactional
@@ -85,11 +83,12 @@ public class FileService {
         Path path = Path.of(bucket, dto.id().toString(), fileDto.file().getOriginalFilename());
 
         File curFile = new File();
-        curFile.setLink(bucket + "/" + dto.id() + "/" + fileDto.file().getOriginalFilename());
+        curFile.setLink(fileDto.file().getOriginalFilename());
         curFile.setCreatedBy(dto.id().toString());
         curFile.setModifiedBy(dto.id().toString());
         curFile.setCreatedAt(Instant.now());
         curFile.setModifiedAt(Instant.now());
+        curFile.setAccessType(fileDto.accessType());
 
         User userEntity = userRepository.findById(dto.id()).get();
 
@@ -111,8 +110,8 @@ public class FileService {
 
     @Transactional
     @SneakyThrows
-    public Optional<FileReadDto> update(FileCreateEditDto dto) {
-        Path path = Path.of(bucket, dto.file().getOriginalFilename());
+    public Optional<FileReadDto> update(UserAuthDto userDto, FileCreateEditDto dto) {
+        Path path = Path.of(bucket, userDto.id().toString(), dto.file().getOriginalFilename());
         var inputStream = dto.file().getInputStream();
         try (inputStream) {
             Files.write(path, inputStream.readAllBytes(), CREATE, TRUNCATE_EXISTING);

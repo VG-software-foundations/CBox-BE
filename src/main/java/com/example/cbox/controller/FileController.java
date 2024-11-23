@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,14 +33,15 @@ public class FileController {
 
     @SneakyThrows
     @PostMapping("/upload")
-    public ResponseEntity<FileReadDto> upload(@RequestParam UserAuthDto dto,
-                                              @RequestParam FileCreateEditDto fileDto) {
+    public ResponseEntity<FileReadDto> upload(@AuthenticationPrincipal UserAuthDto dto,
+                                              @ModelAttribute FileCreateEditDto fileDto) {
         return ok().body(fileService.create(dto, fileDto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FileGetDto> findById(@PathVariable("id") Long id) {
-        return fileService.findById(id)
+    public ResponseEntity<FileGetDto> findById(@AuthenticationPrincipal UserAuthDto dto,
+                                               @PathVariable("id") Long id) {
+        return fileService.findById(dto, id)
                 .map(obj -> ok()
                         .body(obj))
                 .orElseGet(notFound()::build);
@@ -56,17 +56,18 @@ public class FileController {
 
     @SneakyThrows
     @PutMapping
-    public ResponseEntity<FileReadDto> update(@RequestParam FileCreateEditDto fileDto) {
-        return fileService.update(fileDto)
+    public ResponseEntity<FileReadDto> update(@AuthenticationPrincipal UserAuthDto dto,
+                                                @RequestParam FileCreateEditDto fileDto) {
+        return fileService.update(dto, fileDto)
                 .map(obj -> ok().body(obj))
                 .orElseGet(notFound()::build);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestParam UserAuthDto dto,
-                                       @RequestParam String fileName) {
-        log.info("delete() for file with id {} called", fileName);
-        return fileService.deleteByLink(dto, fileName)
+                                       @RequestParam Long id) {
+        log.info("delete() for file with id {} called", id);
+        return fileService.delete(id)
                 ? noContent().build()
                 : notFound().build();
     }

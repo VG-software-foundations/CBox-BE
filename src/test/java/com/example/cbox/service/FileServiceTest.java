@@ -42,7 +42,7 @@ public class FileServiceTest extends IntegrationTestBase {
     @ParameterizedTest
     @ValueSource(longs = {1, 2})
     void findById(Long id) {
-        var user = fileService.findById(id);
+        var user = fileService.findById(new UserAuthDto(null, null, null, null), id);
 
         System.out.println("a");
 

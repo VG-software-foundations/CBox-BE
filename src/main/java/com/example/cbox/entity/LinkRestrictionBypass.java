@@ -18,17 +18,17 @@ public class LinkRestrictionBypass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Include
-    Long id;
+    private Long id;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "file_id")
-    File fileId;
+    private File fileId;
 
 
     @JoinColumn(nullable = false, name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    User userId;
+    private User userId;
 
     public void setUser(User user) {
         this.userId = user;
