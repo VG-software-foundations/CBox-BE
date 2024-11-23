@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Page<UserReadDto> findAll(Integer page, Integer limit) {
         PageRequest req = PageRequest.of(page - 1, limit);
@@ -42,6 +44,7 @@ public class UserService {
                 .map(user -> {
                     user.setId(UUID.randomUUID());
                     user.setStatus(UserStatus.ACTIVE);
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
                     return user;
                 })
                 .map(userRepository::save)

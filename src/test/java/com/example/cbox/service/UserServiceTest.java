@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.UUID;
 
@@ -31,7 +33,7 @@ class UserServiceTest extends IntegrationTestBase {
 
     @BeforeEach
     void setForService() {
-        userService = new UserService(userMapper, userRepository);
+        userService = new UserService(userMapper, userRepository, new BCryptPasswordEncoder());
     }
 
     @Test
@@ -59,7 +61,7 @@ class UserServiceTest extends IntegrationTestBase {
     @Test
     void update() {
         UserCreateEditDto test = new UserCreateEditDto(
-                "test@gmail.com", "12345123456234567", "Test", "Testovich", "Testov", "+375299999999", Role.USER);
+                "test@gmail.com", "12345123456234567", Role.USER);
 
         var result = userService.update(USER_ID, test);
 

@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +28,7 @@ import static org.springframework.http.ResponseEntity.*;
 @ValidatedController
 @RequestMapping(value = "/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
@@ -84,6 +86,7 @@ public class UserController {
     @Operation(summary = "Авторизация пользователя")
     @PostMapping("/sign-in")
     public JwtAuthenticationResponse signIn(@RequestBody @Valid UserLoginDto request) {
+        log.info(request.toString());
         return authenticationService.signIn(request);
     }
 
