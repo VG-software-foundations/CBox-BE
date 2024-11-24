@@ -64,9 +64,9 @@ class UserServiceTest extends IntegrationTestBase {
     void create(String username) {
         UserCreateEditDto test = new UserCreateEditDto("asbdishfioi23r3lA", username, Role.USER);
 
-        UserReadDto userReadDto = userService.create(test);
+        UUID uuid = userService.create(test, 123);
 
-        assertNotNull(userReadDto);
+        assertNotNull(uuid);
     }
 
     @ParameterizedTest

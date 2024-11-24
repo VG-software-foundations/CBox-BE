@@ -16,6 +16,17 @@ spring:
       format_sql: true
       hbm2ddl.auto: validate
     open-in-view: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 2vektor54@gmail.com
+    password: ophgpdjblpirbabc
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
 token:
   signing:
     key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855

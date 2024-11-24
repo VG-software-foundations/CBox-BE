@@ -35,6 +35,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfiguration {
     private final JwtTokenFilter jwtTokenFilter;
     private final UserService userService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -46,7 +47,9 @@ public class SecurityConfiguration {
                                 "/data-selection/**",
                                 "/lots/**",
                                 "/swagger-ui/**",
-                                "/v3/**"
+                                "/v3/**",
+                                "users/sign-in",
+                                "users/sign-up"
                         ).permitAll()
                         .anyRequest().permitAll()
                 )

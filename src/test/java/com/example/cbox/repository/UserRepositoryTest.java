@@ -50,7 +50,7 @@ public class UserRepositoryTest extends IntegrationTestBase {
             "4784470c-2e19-490f-ad22-79003eecb088", "52831983-f37c-48fd-a551-14ca1df4cb67", "ff54e9c5-16ba-4f08-800e-f6fe4ebf363d",
             "523cad5d-d930-4ca9-8eab-5d5758588b91", "f9a27af1-0bea-4f00-a61c-cd63483e88b6", "de7c61ba-cc9c-404d-bf13-035ee10d19d1"})
     void save(UUID id) {
-        User test = new User(id, "abib", "asad", UserStatus.ACTIVE, Role.USER, null);
+        User test = new User(id, "abib", "asad", UserStatus.ACTIVE, Role.USER, 213, null);
 
         var result = userRepository.save(test);
 

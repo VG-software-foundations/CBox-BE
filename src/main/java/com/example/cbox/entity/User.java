@@ -44,6 +44,9 @@ public class User extends AuditingEntity implements UserDetails, Serializable {
     @Column(nullable = false, name = "role")
     private Role role;
 
+    @Column(nullable = false, name = "code")
+    private int code;
+
     @Builder.Default
     @OneToMany(mappedBy = "userId")
     List<LinkRestrictionBypass> restrictions = new ArrayList<>();
