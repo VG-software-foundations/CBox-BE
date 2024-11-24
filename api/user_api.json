@@ -73,34 +73,6 @@
           }
         }
       },
-      "post": {
-        "tags": [
-          "user-controller"
-        ],
-        "operationId": "create",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserCreateEditDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserReadDto"
-                }
-              }
-            }
-          }
-        }
-      },
       "delete": {
         "tags": [
           "user-controller"
@@ -208,6 +180,36 @@
         }
       }
     },
+    "/verify": {
+      "post": {
+        "tags": [
+          "verification-controller"
+        ],
+        "operationId": "verify",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Code"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/sign-up": {
       "post": {
         "tags": [
@@ -263,6 +265,36 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/JwtAuthenticationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs": {
+      "post": {
+        "tags": [
+          "log-controller"
+        ],
+        "operationId": "verify_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -464,6 +496,15 @@
           },
           "type": {
             "type": "string"
+          }
+        }
+      },
+      "Code": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
