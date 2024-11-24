@@ -37,17 +37,30 @@ public class UserService {
     }
 
     @Transactional
-    public UserReadDto create(UserCreateEditDto dto) {
+    public boolean verify(UUID id, Integer code) {
+        return userRepository.findById(id)
+                .map(user -> {
+                    if (code.equals(user.getCode())) {
+                        user.setStatus(UserStatus.ACTIVE);
+                        return true;
+                    }
+                    return false;})
+                .orElse(false);
+    }
+
+    @Transactional
+    public UUID create(UserCreateEditDto dto, int sec) {
         return Optional.of(dto)
                 .map(userMapper::toUser)
                 .map(user -> {
                     user.setId(UUID.randomUUID());
-                    user.setStatus(UserStatus.ACTIVE);
+                    user.setStatus(UserStatus.STOPPED);
+                    user.setCode(sec);
                     user.setPassword(passwordEncoder.encode(user.getPassword()));
                     return user;
                 })
                 .map(userRepository::save)
-                .map(userMapper::toUserReadDto)
+                .map(User::getId)
                 .orElseThrow();
     }
 
@@ -90,7 +103,7 @@ public class UserService {
      */
     public User getByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
     }
 
